@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Find packages
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia Quick WebChannel)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia MultimediaWidgets Quick Network)
 if(Qt6_FOUND)
     qt6_standard_project_setup()
 endif()
@@ -22,8 +22,20 @@ find_package(PkgConfig QUIET)
 find_package(unofficial-ffmpeg QUIET)
 find_package(portaudio QUIET)
 find_package(SndFile QUIET)
-find_package(httplib REQUIRED)
-find_package(nlohmann_json REQUIRED)
+find_package(httplib QUIET)
+find_package(nlohmann_json QUIET)
+
+# Try alternative package names
+if(NOT httplib_FOUND)
+    find_package(PkgConfig QUIET)
+    if(PkgConfig_FOUND)
+        pkg_check_modules(HTTPLIB httplib)
+    endif()
+endif()
+
+if(NOT nlohmann_json_FOUND)
+    find_package(nlohmann-json QUIET)
+endif()
 
 # Enable testing
 enable_testing()

@@ -18,8 +18,8 @@
 #include <QJsonObject>
 #include <memory>
 
-#include "../../shared/ai-integration/include/ai_integration.h"
-#include "../../shared/utils/include/utils.h"
+#include "ai_integration.h"
+#include "utils.h"
 
 class XenoLauncher : public QMainWindow {
     Q_OBJECT
