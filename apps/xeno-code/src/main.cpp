@@ -62,7 +62,7 @@ private:
 
         // Keywords
         QTextCharFormat keywordFormat;
-        keywordFormat.setColor(QColor(86, 156, 214));
+        keywordFormat.setForeground(QColor(86, 156, 214));
         keywordFormat.setFontWeight(QFont::Bold);
         QStringList keywordPatterns;
         keywordPatterns << "\\bclass\\b" << "\\bstruct\\b" << "\\bnamespace\\b"
@@ -79,14 +79,14 @@ private:
 
         // Strings
         QTextCharFormat stringFormat;
-        stringFormat.setColor(QColor(214, 157, 133));
+        stringFormat.setForeground(QColor(214, 157, 133));
         rule.pattern = QRegularExpression(QStringLiteral("\".*\""));
         rule.format = stringFormat;
         highlightingRules.append(rule);
 
         // Comments
         QTextCharFormat commentFormat;
-        commentFormat.setColor(QColor(106, 153, 85));
+        commentFormat.setForeground(QColor(106, 153, 85));
         rule.pattern = QRegularExpression(QStringLiteral("//[^\n]*"));
         rule.format = commentFormat;
         highlightingRules.append(rule);

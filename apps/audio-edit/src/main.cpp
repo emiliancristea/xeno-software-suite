@@ -1,4 +1,5 @@
 #include <QThread>
+#include <QTimer>
 #include <QApplication>
 #include <QMainWindow>
 #include <QVBoxLayout>
