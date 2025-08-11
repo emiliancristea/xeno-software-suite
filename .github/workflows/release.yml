@@ -1,0 +1,163 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Xeno Software Suite ${{ github.ref }}
+        body: |
+          ## Xeno Software Suite Release
+          
+          This release includes the complete Xeno Software Suite with AI-enhanced creative tools:
+          
+          ### Applications Included:
+          - **Xeno Launcher**: Central hub for managing applications and credits
+          - **Image Edit**: AI-powered image editor with generative fill
+          - **Video Edit**: Advanced video editor with auto-editing features
+          - **Audio Edit**: Professional audio editor with voice cloning
+          - **Xeno Code**: AI-assisted IDE with code suggestions
+          
+          ### Platform Integration:
+          - Xeno AI Cloud integration for credit-based AI usage
+          - Open Router API support for third-party models
+          - Ollama integration for local LLM support
+          
+          ### Installation:
+          1. Download the appropriate package for your platform
+          2. Extract the archive
+          3. Run the setup script or installer
+          4. Configure API keys in the application settings
+          
+          For detailed setup instructions, see the [README.md](https://github.com/emiliancristea/xeno-software-suite/blob/main/README.md).
+        draft: false
+        prerelease: false
+
+  build-release:
+    needs: create-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.5.0'
+        modules: 'qtmultimedia qtwebengine'
+        
+    - name: Setup vcpkg (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        ./bootstrap-vcpkg.sh
+        echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
+        
+    - name: Setup vcpkg (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git
+        cd vcpkg
+        .\bootstrap-vcpkg.bat
+        echo "VCPKG_ROOT=${{ github.workspace }}\vcpkg" >> $env:GITHUB_ENV
+        
+    - name: Install dependencies
+      run: |
+        vcpkg install --triplet=${{ runner.os == 'Windows' && 'x64-windows' || (runner.os == 'macOS' && 'x64-osx' || 'x64-linux') }}
+        
+    - name: Configure CMake
+      run: |
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake
+        
+    - name: Build
+      run: cmake --build build --config Release --parallel
+      
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure --parallel --build-config Release
+      
+    - name: Create archive (Linux)
+      if: runner.os == 'Linux'
+      run: |
+        cd build
+        tar -czf ../xeno-suite-linux-x64.tar.gz \
+          apps/launcher/xeno-launcher \
+          apps/image-edit/xeno-image-edit \
+          apps/video-edit/xeno-video-edit \
+          apps/audio-edit/xeno-audio-edit \
+          apps/xeno-code/xeno-code
+          
+    - name: Create archive (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        cd build
+        tar -czf ../xeno-suite-macos-x64.tar.gz \
+          apps/launcher/xeno-launcher \
+          apps/image-edit/xeno-image-edit \
+          apps/video-edit/xeno-video-edit \
+          apps/audio-edit/xeno-audio-edit \
+          apps/xeno-code/xeno-code
+          
+    - name: Create archive (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        cd build
+        7z a ../xeno-suite-windows-x64.zip `
+          apps/launcher/Release/xeno-launcher.exe `
+          apps/image-edit/Release/xeno-image-edit.exe `
+          apps/video-edit/Release/xeno-video-edit.exe `
+          apps/audio-edit/Release/xeno-audio-edit.exe `
+          apps/xeno-code/Release/xeno-code.exe
+          
+    - name: Upload Linux Release Asset
+      if: runner.os == 'Linux'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./xeno-suite-linux-x64.tar.gz
+        asset_name: xeno-suite-linux-x64.tar.gz
+        asset_content_type: application/gzip
+        
+    - name: Upload macOS Release Asset
+      if: runner.os == 'macOS'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./xeno-suite-macos-x64.tar.gz
+        asset_name: xeno-suite-macos-x64.tar.gz
+        asset_content_type: application/gzip
+        
+    - name: Upload Windows Release Asset
+      if: runner.os == 'Windows'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./xeno-suite-windows-x64.zip
+        asset_name: xeno-suite-windows-x64.zip
+        asset_content_type: application/zip

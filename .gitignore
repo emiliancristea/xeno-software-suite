@@ -1,0 +1,78 @@
+# C++ Build artifacts
+build/
+out/
+install/
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.obj
+*.o
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+!*.cmake
+
+# vcpkg
+vcpkg/
+vcpkg_installed/
+.vcpkg-root
+
+# Qt
+*.qm
+*.prl
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.pro.user
+*.pro.user.*
+
+# IDEs
+.vscode/
+.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*~
+
+# Configuration files with secrets
+config.json
+*.env
+.env
+
+# Test artifacts
+Testing/
+CTestTestfile.cmake
+test_results/
+
+# Package files
+*.deb
+*.rpm
+*.msi
+*.dmg
+*.pkg

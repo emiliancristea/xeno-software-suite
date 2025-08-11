@@ -1,0 +1,33 @@
+{
+  "name": "xeno-software-suite",
+  "version": "1.0.0",
+  "description": "AI-enhanced creative and coding tools integrated with Xeno Labs platform",
+  "homepage": "https://github.com/emiliancristea/xeno-software-suite",
+  "dependencies": [
+    {
+      "name": "qt6",
+      "features": [
+        "widgets",
+        "multimedia",
+        "quick",
+        "webchannel",
+        "webengine"
+      ]
+    },
+    "opencv4",
+    {
+      "name": "ffmpeg", 
+      "features": [
+        "avcodec",
+        "avformat",
+        "swscale"
+      ]
+    },
+    "portaudio",
+    "libsndfile",
+    "cpp-httplib",
+    "nlohmann-json",
+    "gtest"
+  ],
+  "builtin-baseline": "2024.01.12"
+}
