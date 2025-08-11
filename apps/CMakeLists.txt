@@ -1,0 +1,5 @@
+add_subdirectory(launcher)
+add_subdirectory(image-edit)
+add_subdirectory(video-edit)
+add_subdirectory(audio-edit)
+add_subdirectory(xeno-code)
