@@ -1,5 +1,3 @@
-qt6_standard_project_setup()
-
 add_executable(xeno-audio-edit
     src/main.cpp
 )

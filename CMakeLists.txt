@@ -13,11 +13,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Find packages
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Multimedia Quick WebChannel)
-find_package(OpenCV REQUIRED)
-find_package(PkgConfig REQUIRED)
-find_package(unofficial-ffmpeg REQUIRED)
-find_package(portaudio REQUIRED)
-find_package(SndFile REQUIRED)
+if(Qt6_FOUND)
+    qt6_standard_project_setup()
+endif()
+
+find_package(OpenCV QUIET)
+find_package(PkgConfig QUIET)
+find_package(unofficial-ffmpeg QUIET)
+find_package(portaudio QUIET)
+find_package(SndFile QUIET)
 find_package(httplib REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
