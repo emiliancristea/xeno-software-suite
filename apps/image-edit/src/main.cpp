@@ -1,3 +1,4 @@
+#include <QThread>
 #include <QApplication>
 #include <QMainWindow>
 #include <QVBoxLayout>
@@ -20,8 +21,8 @@
 #include <opencv2/opencv.hpp>
 #include <memory>
 
-#include "../../shared/ai-integration/include/ai_integration.h"
-#include "../../shared/utils/include/utils.h"
+#include "ai_integration.h"
+#include "utils.h"
 
 class ImageEditWindow : public QMainWindow {
     Q_OBJECT

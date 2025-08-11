@@ -10,8 +10,7 @@
         "widgets",
         "multimedia",
         "quick",
-        "webchannel",
-        "webengine"
+        "webchannel"
       ]
     },
     "opencv4",
@@ -28,6 +27,5 @@
     "cpp-httplib",
     "nlohmann-json",
     "gtest"
-  ],
-  "builtin-baseline": "d30fdf55cfca16e12bc3ad99cbc615997014b61b"
+  ]
 }

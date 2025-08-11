@@ -1,5 +1,10 @@
 #include "ai_integration.h"
+#ifdef HAVE_HTTPLIB
 #include <httplib.h>
+#endif
+#ifdef HAVE_NLOHMANN_JSON
+#include <nlohmann/json.hpp>
+#endif
 #include <iostream>
 #include <fstream>
 
